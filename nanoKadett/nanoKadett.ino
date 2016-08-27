@@ -3,7 +3,6 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-
 // commands constants
 const byte OIL_PRESSURE_ON = B00011111;
 const byte OIL_PRESSURE_OFF = B00010000;
@@ -55,6 +54,8 @@ int pinPiResetSwitch = CONTROLLINO_R0;
 int speedFrequency = 0;
 int counter = 0;
 int pinSpeedPreviousValue = 0;
+float sp33d = 0;
+int speedCounter = 0;
 
 //Arduino Ethernet Config
 byte mac[] = {
@@ -210,18 +211,23 @@ void reapPinIgnition()
 
 void readPinSpeed()
 {
-  unsigned long pulseTime = pulseIn(pinSpeed, LOW, 20000);
-  if (pulseTime == 0) {
-    writeComplexCommand(SPEED_PULSE, 0);
+  if (speedCounter >= 15) {
+    writeComplexCommand(SPEED_PULSE, (int)(sp33d / speedCounter));
+    sp33d = 0;
+    speedCounter = 0;
   } else {
+    unsigned long pulseTime = pulseIn(pinSpeed, LOW, 10000);
     int frequencyInstant = 500000 / pulseTime;
-    writeComplexCommand(SPEED_PULSE, frequencyInstant);
+    if(frequencyInstant > 25) {
+    sp33d += (float) (frequencyInstant * 38) / (float) 210;
+    speedCounter++;
+    }
   }
 }
 
 void readPinRpm()
 {
-  unsigned long pulseTime = pulseIn(pinRpm, LOW, 20000);
+  unsigned long pulseTime = pulseIn(pinRpm, LOW, 7000);
   if (pulseTime == 0) {
     writeComplexCommand(RPM_PULSE, 0);
   } else {
@@ -282,4 +288,3 @@ void udpwriteByte(byte b)
   udp.write(response, 2); //ReplyBuffer);
   udp.endPacket();
 }
-
