@@ -36,19 +36,19 @@ int temp = 0;
 int tempCounter = 0;
 
 //Pin assignments
-int pinHighBeam = CONTROLLINO_A0;
-int pinTurningSigns = CONTROLLINO_A1;
-int pinABS = CONTROLLINO_A2;
-int pinSparkPlugs = CONTROLLINO_A3;
-int pinBrakesOil = CONTROLLINO_A4;
-int pinParkingBrake = CONTROLLINO_A5;
-int pinBattery = CONTROLLINO_A6;
-int pinOilPressure = CONTROLLINO_A7;
-int pinDiesel = CONTROLLINO_A8;
-int pinTemperature = CONTROLLINO_A9;
-int pinIgnitionPi = CONTROLLINO_A10;
-int pinSpeed = CONTROLLINO_A11;
-int pinRpm = CONTROLLINO_A12;
+int pinHighBeam = CONTROLLINO_A0; //branco1
+int pinTurningSigns = CONTROLLINO_A1;//rosa1
+int pinABS = CONTROLLINO_A2;//violeta1
+int pinSparkPlugs = CONTROLLINO_A3;//preto1
+int pinBrakesOil = CONTROLLINO_A4;//cinza1
+int pinParkingBrake = CONTROLLINO_A5;//amarelo1
+int pinBattery = CONTROLLINO_A6;//castanho1
+int pinOilPressure = CONTROLLINO_A7;//azul1
+int pinDiesel = CONTROLLINO_A8;//verde
+int pinTemperature = CONTROLLINO_A9;//vermelho
+int pinIgnitionPi = CONTROLLINO_A10;//laranja
+int pinSpeed = CONTROLLINO_A11;//transparente
+int pinRpm = CONTROLLINO_A12;//azul2
 int pinPiResetSwitch = CONTROLLINO_R0;
 
 int speedFrequency = 0;
