@@ -26,6 +26,7 @@ const byte DIESEL_VALUE = B11100000;
 const byte TEMPERATURE_VALUE = B11000000;
 const byte IGNITION_OFF = B10101010;
 const byte IGNITION_ON = B10101011;
+const byte TURN_OFF = B11111111;
 
 byte previousValues[23];
 int frequency = 0;
@@ -49,7 +50,8 @@ int pinTemperature = CONTROLLINO_A9;//vermelho
 int pinIgnitionPi = CONTROLLINO_A10;//laranja
 int pinSpeed = CONTROLLINO_A11;//transparente
 int pinRpm = CONTROLLINO_A12;//azul2
-int pinPiResetSwitch = CONTROLLINO_R0;
+int pinBatteryVoltage = CONTROLLINO_A13;
+int pinPiSwitch = CONTROLLINO_R0;
 
 int speedFrequency = 0;
 int counter = 0;
@@ -82,8 +84,9 @@ void setup() {
   pinMode(pinRpm, INPUT);
   pinMode(pinDiesel, INPUT);
   pinMode(pinTemperature, INPUT);
+  pinMode(pinBatteryVoltage, INPUT);
   pinMode(pinIgnitionPi, INPUT);
-  pinMode(pinPiResetSwitch, OUTPUT);
+  pinMode(pinPiSwitch, OUTPUT);
 
   previousValues[pinOilPressure] = 0;
   previousValues[pinBattery] = 0;
@@ -99,6 +102,8 @@ void setup() {
 
   Ethernet.begin(mac, ip, gateway, subnet);
   udp.begin(23);
+
+  digitalWrite(pinPiSwitch, HIGH)
 }
 //pressao do oleo funciona - resistencia do pino da ficha, zener do pino do arduino para gnd
 //estacionamento feito - resistencia do pino da ficha, zener do pino do arduino para gnd
@@ -198,6 +203,17 @@ void readPinHighBeam()
 void reapPinIgnition()
 {
   int value = digitalRead(pinIgnitionPi);
+
+  if (value == 0 && analogRead(pinBatteryVoltage) <= 800)
+  {
+    udpwriteByte(TURN_OFF);
+    digitalWrite(pinPiSwitch, LOW)
+  }
+  else if (value == 1 && analogRead(pinBatteryVoltage) > 800)
+  {
+    digitalWrite(pinPiSwitch, LOW)
+  }
+
   if (value == 1 && previousValues[pinIgnitionPi] == 0)
   {
     udpwriteByte(IGNITION_ON);
@@ -218,9 +234,9 @@ void readPinSpeed()
   } else {
     unsigned long pulseTime = pulseIn(pinSpeed, LOW, 10000);
     int frequencyInstant = 500000 / pulseTime;
-    if(frequencyInstant > 25) {
-    sp33d += (float) (frequencyInstant * 38) / (float) 210;
-    speedCounter++;
+    if (frequencyInstant > 25) {
+      sp33d += (float) (frequencyInstant * 38) / (float) 210;
+      speedCounter++;
     }
   }
 }
