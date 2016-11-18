@@ -213,7 +213,13 @@ void readPinSpeed()
     speedCounter = 0;
   } else {
     unsigned long pulseTime = pulseIn(pinSpeed, LOW, 10000);
-    int frequencyInstant = 500000 / pulseTime;
+
+    int frequencyInstant = 0;
+    
+    if (pulseTime > 0) {
+      frequencyInstant = 500000 / pulseTime;
+    }
+    
     if (frequencyInstant > 25) {
       sp33d += (float) (frequencyInstant * 38) / (float) 210;
       speedCounter++;
