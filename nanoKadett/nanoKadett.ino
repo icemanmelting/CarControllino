@@ -1,5 +1,4 @@
 #include <Controllino.h>
-#include <elapsedMillis.h>
 #include <SPI.h>
 #include <Ethernet.h>
 
@@ -51,7 +50,6 @@ int pinIgnitionPi = CONTROLLINO_A10;//laranja
 int pinSpeed = CONTROLLINO_A11;//transparente
 int pinRpm = CONTROLLINO_A12;//azul2
 int pinBatteryVoltage = CONTROLLINO_A13;
-int pinPiSwitch = CONTROLLINO_R0;
 
 int speedFrequency = 0;
 int counter = 0;
@@ -86,7 +84,6 @@ void setup() {
   pinMode(pinTemperature, INPUT);
   pinMode(pinBatteryVoltage, INPUT);
   pinMode(pinIgnitionPi, INPUT);
-  pinMode(pinPiSwitch, OUTPUT);
 
   previousValues[pinOilPressure] = 0;
   previousValues[pinBattery] = 0;
@@ -102,19 +99,7 @@ void setup() {
 
   Ethernet.begin(mac, ip, gateway, subnet);
   udp.begin(23);
-
-  digitalWrite(pinPiSwitch, HIGH)
 }
-//pressao do oleo funciona - resistencia do pino da ficha, zener do pino do arduino para gnd
-//estacionamento feito - resistencia do pino da ficha, zener do pino do arduino para gnd
-//bateria funciona - - resistencia do pino da ficha, zener do pino do arduino para gnd
-//maximos funciona - voltage divider 320ohm (R1) 220ohm(R2) com zener
-//piscas - voltage divider 320ohm (R1) 220ohm (R2) com zener
-//abs - voltage divider 320ohm (R1) 220ohm (R2) com zener
-//resistencia velas - voltage divider 320ohm (R1) 220ohm (R2) com zener
-// velocidade - onda quadrada de 12v-0, provavelmente será voltage divider 320ohm (R1) 220ohm (R2) com zener
-// gasóleo faz leitura - resistencia do pino analogico aos 5v do Arduino, pino analogico ao da ficha cheio 37
-//temperatura - resistencia do pino analogico aos 5v do Arduino, pino analogico ao da ficha - normal 107, frio 558
 
 void loop() {
   readPins();
@@ -204,14 +189,9 @@ void reapPinIgnition()
 {
   int value = digitalRead(pinIgnitionPi);
 
-  if (value == 0 && analogRead(pinBatteryVoltage) <= 800)
+  if (value == 0 && analogRead(pinBatteryVoltage) <= 600)
   {
     udpwriteByte(TURN_OFF);
-    digitalWrite(pinPiSwitch, LOW)
-  }
-  else if (value == 1 && analogRead(pinBatteryVoltage) > 800)
-  {
-    digitalWrite(pinPiSwitch, LOW)
   }
 
   if (value == 1 && previousValues[pinIgnitionPi] == 0)
