@@ -108,9 +108,9 @@ void loop() {
 void readPinOilPressure()
 {
   int value = digitalRead(pinOilPressure);
-  if (value == 0 )
+  if (value == 0 && previousValues[pinOilPressure] == 1)
     udpwriteByte(OIL_PRESSURE_ON);
-  else if (value == 1)
+  else if (value == 1 && previousValues[pinOilPressure] == 0)
     udpwriteByte(OIL_PRESSURE_OFF);
 }
 
@@ -126,9 +126,9 @@ void readPinBattery()
 void readPinParkingBrake()
 {
   int value = digitalRead(pinParkingBrake);
-  if (value == 0)
+  if (value == 0 && previousValues[pinParkingBrake] == 1)
     udpwriteByte(PARKING_BRAKE_ON);
-  else
+  else if (value == 1 && previousValues[pinParkingBrake] == 0)
     udpwriteByte(PARKING_BRAKE_OFF);
 
   previousValues[pinParkingBrake] = value;
@@ -137,27 +137,27 @@ void readPinParkingBrake()
 void readPinBrakesOil()
 {
   int value = digitalRead(pinBrakesOil);
-  if (value == 0 )
+  if (value == 0 && previousValues[pinBrakesOil] == 1)
     udpwriteByte(BRAKES_OIL_ON);
-  else if (value == 1 )
+  else if (value == 1 && previousValues[pinBrakesOil] == 0)
     udpwriteByte(BRAKES_OIL_OFF);
 }
 
 void readPinTurningSigns()
 {
   int value = digitalRead(pinTurningSigns);
-  if (value == 0)
+  if (value == 0 && previousValues[pinTurningSigns] == 1)
     udpwriteByte(TURNING_SIGNS_ON);
-  else if (value == 1)
+  else if (value == 1 && previousValues[pinTurningSigns] == 0)
     udpwriteByte(TURNING_SIGNS_OFF);
 }
 
 void readPinSparkPlug()
 {
   int value = digitalRead(pinSparkPlugs);
-  if (value == 0)
+  if (value == 0 && previousValues[pinSparkPlugs] == 1)
     udpwriteByte(SPARK_PLUGS_ON);
-  else if (value == 1)
+  else if (value == 1 && previousValues[pinSparkPlugs] == 0)
     udpwriteByte(SPARK_PLUGS_OFF);
   previousValues[pinSparkPlugs] = value;
 }
