@@ -146,9 +146,9 @@ void readPinBrakesOil()
 void readPinTurningSigns()
 {
   int value = digitalRead(pinTurningSigns);
-  if (value == 0 && previousValues[pinTurningSigns] == 1)
+  if (value == 0)
     udpwriteByte(TURNING_SIGNS_ON);
-  else if (value == 1 && previousValues[pinTurningSigns] == 0)
+  else if (value == 1)
     udpwriteByte(TURNING_SIGNS_OFF);
 }
 
